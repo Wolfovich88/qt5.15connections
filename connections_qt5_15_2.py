@@ -5,7 +5,7 @@ import sys
 import os
 
 def commonCondition(line):
-    return " on" in line and "target:" not in line and "console." not in line and "function " not in line and "//" not in line and "showToast" not in line and "qsTr" not in line
+    return (" on" in line or "	on" in line) and "target:" not in line and "console." not in line and "function " not in line and "//" not in line and "qsTr" not in line
 
 def condition(line):
     return ": {" in line and commonCondition(line)
@@ -15,6 +15,7 @@ def condition2(line):
 
 def _changeConnectionsSyntax(filename):
     f = open(filename, 'r+', encoding="utf8")
+    #print("Opening file: " + filename)
     content = f.readlines()
     f.seek(0)
     insideConnection = False
@@ -29,6 +30,7 @@ def _changeConnectionsSyntax(filename):
         if insideConnection == True and condition(line):
             insideHandlerLevel += 1
             newLine = line.replace(" on", " function on", 1)
+            newLine = line.replace("	on", "	function on", 1)
             newLine = newLine.replace(":", "()", 1)
             f.write(newLine)
             changesCount += 1
@@ -36,6 +38,7 @@ def _changeConnectionsSyntax(filename):
         
         elif insideConnection == True and condition2(line):
             newLine = line.replace(" on", " function on")
+            newLine = line.replace("	on", "	function on", 1)
             newLine = newLine.replace(":", "() {", 1)
             newLine = newLine.replace("\n", " }\n", 1)
             f.write(newLine)
@@ -69,4 +72,4 @@ if __name__ == "__main__":
             if ext == "qml":
                 count = _changeConnectionsSyntax(os.path.join(root, f))
                 if count > 0:
-                    print ("Made %s changes in file %s" % (count, f)) 
+                    print ("Made %s changes in the file %s" % (count, f))
