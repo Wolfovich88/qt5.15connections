@@ -14,7 +14,7 @@ def condition2(line):
     return "{" not in line and commonCondition(line)
 
 def _changeConnectionsSyntax(filename):
-    f = open(filename, 'r+')
+    f = open(filename, 'r+', encoding="utf8")
     content = f.readlines()
     f.seek(0)
     insideConnection = False
@@ -59,7 +59,7 @@ def _changeConnectionsSyntax(filename):
 if __name__ == "__main__":
     if len (sys.argv) != 2:
         print ("The script changes old Connections systax to new (for Qt5.15 and later) in all qml files in a given directory")
-        print ("Also it change import QtQuick 2.* version to QtQuick 2.15 (actually not)")
+        print ("Also it changes import QtQuick 2.* version to QtQuick 2.15 (actually not)")
         print ("Run the script with a parameter: <path_to_destination_folder>")
         sys.exit(1)
 
