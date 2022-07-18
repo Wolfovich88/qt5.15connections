@@ -5,9 +5,8 @@ import sys
 import os
 
 def spaceTabCondition(line):
+    print(line)
     tmp = line.split("on", 1)[0]
-    if tmp.isspace():
-        return True
     tmp.replace("\t", " ")
     return tmp.isspace()
 
@@ -15,7 +14,7 @@ def commonCondition(line):
     return (" on" in line or "\ton" in line) and "target:" not in line and "function " not in line and spaceTabCondition(line)
 
 def condition(line):
-    return ": {" in line and commonCondition(line)
+    return (": {" in line or ":{" in line) and commonCondition(line)
 
 def condition2(line):
     return "{" not in line and commonCondition(line)
@@ -39,6 +38,7 @@ def _changeConnectionsSyntax(filename):
             insideHandlerLevel += 1
             newLine = line.replace(" on", " function on", 1)
             newLine = line.replace("\ton", "\tfunction on", 1)
+            newLine = newLine.replace(":{", ": {", 1)
             newLine = newLine.replace(":", "()", 1)
             f.write(newLine)
             changesCount += 1
