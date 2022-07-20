@@ -5,7 +5,6 @@ import sys
 import os
 
 def spaceTabCondition(line):
-    print(line)
     tmp = line.split("on", 1)[0]
     tmp.replace("\t", " ")
     return tmp.isspace()
@@ -31,13 +30,16 @@ def _changeConnectionsSyntax(filename):
     
     for line in content:
               
-        if "Connections" in line and "{" in line: #TODO: comment the "and "{" in line" to change syntax in wrog written Connections with "{" symbol on the next string, then fix it to Connections {
+        if "Connections" in line:# and "{" in line: #TODO: comment the "and "{" in line" to change syntax in Connections with "{" symbol on the next string, then fix it to Connections {
             insideConnection = True
         
         if insideConnection == True and condition(line):
             insideHandlerLevel += 1
-            newLine = line.replace(" on", " function on", 1)
-            newLine = line.replace("\ton", "\tfunction on", 1)
+            if " on" in line:
+                newLine = line.replace(" on", " function on", 1)
+            elif "\ton" in line:
+                newLine = line.replace("\ton", "\tfunction on", 1)
+            
             newLine = newLine.replace(":{", ": {", 1)
             newLine = newLine.replace(":", "()", 1)
             f.write(newLine)
@@ -45,8 +47,11 @@ def _changeConnectionsSyntax(filename):
             continue
         
         elif insideConnection == True and condition2(line):
-            newLine = line.replace(" on", " function on", 1)
-            newLine = line.replace("\ton", "\tfunction on", 1)
+            if " on" in line:
+                newLine = line.replace(" on", " function on", 1)
+            elif "\ton" in line:
+                newLine = line.replace("\ton", "\tfunction on", 1)
+            
             newLine = newLine.replace(":", "() {", 1)
             newLine = newLine.replace("\n", " }\n", 1)
             f.write(newLine)
